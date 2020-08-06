@@ -1,0 +1,15 @@
+---
+      - name: install httpd and mod_ssl packages
+        yum: 
+          name: "{{ item }}"
+        with_items:
+          - "{{ web_package }}"
+          - "{{ ssl_package }}"
+        when:
+          - inventory_hostname in groups["web_servers"]
+          - "(ansible_memory_mb.real.total) > (memory)"
+
+      - name: starts the service
+        service:
+          name: "{{ web_service }}"
+          state: started
